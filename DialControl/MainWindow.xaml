@@ -19,10 +19,8 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-
-      
+ 
         <Line Name="linePointer" StrokeThickness="1" Stroke="DarkGray" X1="9" Y1="2" X2="190" Y2="0" ></Line>
         
-         
     </Canvas>
 </Window>

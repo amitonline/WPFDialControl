@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace DialControl
 {
@@ -29,10 +30,14 @@ namespace DialControl
         private double mDialRadius = 0;
         private double mMarkerAngle = 45; // 15, 40, 45,60,90,
         private int mMarkerCount = 0;
-        private ArrayList mArrPositions = new ArrayList(); // x,y pos for the marker dial to move through
+        private ArrayList mArrOrigPositions = new ArrayList(); // complete lines x,y pos for the marker dial to move through
+        private ArrayList mArrPositions = new ArrayList(); // adjusted x,y pos for the marker dial to move through
      
         private int mCurrMarkerPos = 0;
         private bool mMousePosProcessing = false;   // becomes true when mouse pos is being calculated
+
+        private ArrayList mArrArcs = new ArrayList(); //array of selection arcs
+ 
 
 
         public MainWindow()
@@ -166,16 +171,20 @@ namespace DialControl
                 canvas.Children.Add(ln);
 
                 mArrPositions.Add(new Point(markerX, markerY));
-              
+                mArrOrigPositions.Add(new Point(stopX, stopY));
+
+               
                 //rotate 
                 Point newPoint = rotatePoint(new Point(stopX, stopY), ptCenter, mMarkerAngle);
                 stopX = newPoint.X; stopY = newPoint.Y;
 
+              
                 
             }
             placeMarker(mCurrMarkerPos);
         }
 
+        
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             init();
@@ -209,24 +218,34 @@ namespace DialControl
       
         private void processMarkerPos(MouseEventArgs e)
         {
-                if (mMousePosProcessing)
-                    return;
-                mMousePosProcessing = true;
-                Point ptThis = e.GetPosition(this);
-                double thisX = ptThis.X; double thisY = ptThis.Y;
+            if (mMousePosProcessing)
+                return;
+            mMousePosProcessing = true;
+            Point ptThis = e.GetPosition(this);
+            double thisX = ptThis.X; double thisY = ptThis.Y;
+            bool toUpdate = true;
             if (e.RightButton == MouseButtonState.Pressed) // decrease
             {
                 mCurrMarkerPos--;
                 if (mCurrMarkerPos < 0)
-                    mCurrMarkerPos = mMarkerCount - 1;
+                {
+                    mCurrMarkerPos = 0;
+                    toUpdate = false;
+                }
             }
             if (e.LeftButton == MouseButtonState.Pressed) { // increase            {
                 mCurrMarkerPos++;
                 if (mCurrMarkerPos >= mMarkerCount)
-                    mCurrMarkerPos = 0;
+                {
+                    mCurrMarkerPos = mMarkerCount - 1;
+                    toUpdate = false;
+                }
             }
-
-            placeMarker(mCurrMarkerPos);
+            if (toUpdate)
+            {
+                placeMarker(mCurrMarkerPos);
+                drawArc(mCurrMarkerPos, e.RightButton == MouseButtonState.Pressed);
+            }
             mMousePosProcessing = false;
         }
 
@@ -238,6 +257,58 @@ namespace DialControl
 
         }
 
+        private void drawArc(int elem, bool remove=false)
+        {
+            if (elem > 0 && !remove)
+            {
+                Point startPt = (Point)mArrOrigPositions[elem-1];
+                Point endPt = (Point)mArrOrigPositions[elem];
+                Line lnTemp = new Line();
+                lnTemp.X1 = startPt.X; lnTemp.Y1 = startPt.Y; lnTemp.X2 = endPt.X; lnTemp.Y2 = endPt.Y;
+                lnTemp.StrokeThickness = 4; lnTemp.Stroke = new SolidColorBrush(Colors.Red);
+                //canvas.Children.Add(lnTemp);
+
+                var g = new StreamGeometry();
+
+                using (var gc = g.Open())
+                {
+                    gc.BeginFigure(
+                    startPoint: new Point(startPt.X, startPt.Y),
+                        isFilled: false,
+                        isClosed: false);
+
+                    gc.ArcTo(
+                        point: new Point(endPt.X, endPt.Y),
+                        size: new Size(100, 100),
+                        rotationAngle: 0d,
+                        isLargeArc: false,
+                        sweepDirection: SweepDirection.Clockwise,
+                        isStroked: true,
+                        isSmoothJoin: false);
+                }
+
+               
+                var arcPath = new Path
+                {
+                    Stroke = Brushes.DarkGray,
+                    StrokeThickness = 6,
+                    Data = g
+                };
+                if (mArrArcs.Count < elem)
+                    mArrArcs.Add(arcPath);
+                else
+                    mArrArcs[elem-1] = arcPath;
+                canvas.Children.Add(arcPath);
+               
+            } else if (remove)
+            {
+                Path thisPath = (Path) mArrArcs[elem];
+                canvas.Children.Remove(thisPath);
+                 
+
+            }
+        }
+     
         private void dial_MouseDown(object sender, MouseButtonEventArgs e)
         {
             processMarkerPos(e);
