@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.CodeDom;
+using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,6 +26,10 @@ namespace DialControl
         private const double LINE_PART_TO_HIDE = 0.90;
         private const double LINE_PART_TO_HIDE_FOR_MARKER = 0.60;
 
+        private const int DIAL_MODE_MODERN = 0;
+        private const int DIAL_MODE_FLAT = 1;
+        private const int DIAL_MODE_VINTAGE = 2;
+
         private double mDialX = 0;
         private double mDialY = 0;
         private double mDialRadius = 0;
@@ -37,8 +42,8 @@ namespace DialControl
         private bool mMousePosProcessing = false;   // becomes true when mouse pos is being calculated
 
         private ArrayList mArrArcs = new ArrayList(); //array of selection arcs
- 
 
+        private int mMode = DIAL_MODE_MODERN;      // dial mode
 
         public MainWindow()
         {
@@ -164,22 +169,34 @@ namespace DialControl
                 {
                     targetX = mDialX; targetY = mDialY;
                 }
-              
+
+               
                 Line ln = new Line();
                 ln.X1 = targetX; ln.Y1 = targetY; ln.X2 = stopX; ln.Y2 = stopY;
                 ln.StrokeThickness = 1; ln.Stroke = System.Windows.Media.Brushes.Gray;
                 canvas.Children.Add(ln);
-
                 mArrPositions.Add(new Point(markerX, markerY));
-                mArrOrigPositions.Add(new Point(stopX, stopY));
 
-               
+                if (mMode == DIAL_MODE_FLAT)
+                {
+                    mArrOrigPositions.Add(new Point(stopX, stopY));
+                    linePointer.Visibility = Visibility.Hidden ;
+                    dial.Effect = null;
+                    dial.Stroke = new SolidColorBrush(Colors.DarkGray);
+                    dial.StrokeThickness = 1;
+                    LinearGradientBrush grad = new LinearGradientBrush();
+                    grad.StartPoint = new Point(0, 0);
+                    grad.EndPoint = new Point(1, 1);
+                    grad.GradientStops.Add(new GradientStop(Colors.White, 0.0));
+                    grad.GradientStops.Add(new GradientStop(Colors.White, 1.0));
+                    dial.Fill = grad;
+                }
+
                 //rotate 
                 Point newPoint = rotatePoint(new Point(stopX, stopY), ptCenter, mMarkerAngle);
                 stopX = newPoint.X; stopY = newPoint.Y;
+                 
 
-              
-                
             }
             placeMarker(mCurrMarkerPos);
         }
@@ -244,7 +261,8 @@ namespace DialControl
             if (toUpdate)
             {
                 placeMarker(mCurrMarkerPos);
-                drawArc(mCurrMarkerPos, e.RightButton == MouseButtonState.Pressed);
+                if (mMode == DIAL_MODE_FLAT)
+                    drawArc(mCurrMarkerPos, e.RightButton == MouseButtonState.Pressed);
             }
             mMousePosProcessing = false;
         }

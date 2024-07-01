@@ -10,10 +10,10 @@
         <Ellipse Width="150" Height="150" Canvas.Left="100" Canvas.Top="25"
                  StrokeThickness="4" Name="dial" MouseDown="dial_MouseDown">
                       <Ellipse.Effect>
-                        <DropShadowEffect Color="Gray" BlurRadius="10"  />
+                        <DropShadowEffect Color="Gray" BlurRadius="10"   x:Name="dialShadow"/>
                      </Ellipse.Effect>
                     <Ellipse.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" x:Name="dialGradBrush">
                     <GradientStop Color="White" Offset="0.0" />
                     <GradientStop Color="DarkGray" Offset="1.0" />
                 </LinearGradientBrush>
