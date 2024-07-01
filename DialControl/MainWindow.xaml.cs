@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -23,9 +24,10 @@ namespace DialControl
     {
         private const int DIAL_ZINDEX = 5;
         private const int LINEPOINTER_ZINDEX = 6;
+        private const int VINTAGEDIAL_ZINDEX = 7;
         private const double LINE_PART_TO_HIDE = 0.90;
         private const double LINE_PART_TO_HIDE_FOR_MARKER = 0.60;
-
+        private const int INNER_DIAL_SIZE_RATIO = 3; // how much smaller will be vintage dial to the main dial
         private const int DIAL_MODE_MODERN = 0;
         private const int DIAL_MODE_FLAT = 1;
         private const int DIAL_MODE_VINTAGE = 2;
@@ -33,6 +35,7 @@ namespace DialControl
         private double mDialX = 0;
         private double mDialY = 0;
         private double mDialRadius = 0;
+        private double mDialVintageRadius = 0;
         private double mMarkerAngle = 45; // 15, 40, 45,60,90,
         private int mMarkerCount = 0;
         private ArrayList mArrOrigPositions = new ArrayList(); // complete lines x,y pos for the marker dial to move through
@@ -52,8 +55,9 @@ namespace DialControl
 
         private void init()
         {
-            //Canvas.SetZIndex(dial, DIAL_ZINDEX);
-            //Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
+            Canvas.SetZIndex(dial, DIAL_ZINDEX);
+            Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
+            Canvas.SetZIndex(dialVintage, VINTAGEDIAL_ZINDEX);
 
             //calc center point of main ellipse
             mDialRadius = (dial.Width) / 2;
@@ -80,6 +84,30 @@ namespace DialControl
 
             double markerX = 0.0; double markerY = 0.0;
 
+            if (mMode == DIAL_MODE_FLAT || mMode == DIAL_MODE_VINTAGE)
+            {
+                linePointer.Visibility = Visibility.Hidden;
+                dial.Effect = null;
+                dial.Stroke = new SolidColorBrush(Colors.DarkGray);
+                dial.StrokeThickness = 1;
+                LinearGradientBrush grad = new LinearGradientBrush();
+                grad.StartPoint = new Point(0, 0);
+                grad.EndPoint = new Point(1, 1);
+                grad.GradientStops.Add(new GradientStop(Colors.White, 0.0));
+                grad.GradientStops.Add(new GradientStop(Colors.White, 1.0));
+                dial.Fill = grad;
+            }
+            if (mMode == DIAL_MODE_VINTAGE)
+            {
+                linePointer.Visibility = Visibility.Visible;
+                linePointer.Stroke = new SolidColorBrush(Colors.Black);
+                dialVintage.Width = dial.Width / INNER_DIAL_SIZE_RATIO;
+                dialVintage.Height = dial.Height / INNER_DIAL_SIZE_RATIO;
+                mDialVintageRadius = (dialVintage.Width) / 2;
+                Canvas.SetLeft(dialVintage, Canvas.GetLeft(dial) + mDialRadius - mDialVintageRadius);
+                Canvas.SetTop(dialVintage, Canvas.GetTop(dial) + mDialRadius - mDialVintageRadius);
+                dialVintage.Visibility = Visibility.Visible;
+            }
             for (int i = 0; i < mMarkerCount; i++)
             {
                 if (true)
@@ -177,19 +205,13 @@ namespace DialControl
                 canvas.Children.Add(ln);
                 mArrPositions.Add(new Point(markerX, markerY));
 
-                if (mMode == DIAL_MODE_FLAT)
+                if (mMode == DIAL_MODE_FLAT || mMode == DIAL_MODE_VINTAGE)
                 {
                     mArrOrigPositions.Add(new Point(stopX, stopY));
-                    linePointer.Visibility = Visibility.Hidden ;
-                    dial.Effect = null;
-                    dial.Stroke = new SolidColorBrush(Colors.DarkGray);
-                    dial.StrokeThickness = 1;
-                    LinearGradientBrush grad = new LinearGradientBrush();
-                    grad.StartPoint = new Point(0, 0);
-                    grad.EndPoint = new Point(1, 1);
-                    grad.GradientStops.Add(new GradientStop(Colors.White, 0.0));
-                    grad.GradientStops.Add(new GradientStop(Colors.White, 1.0));
-                    dial.Fill = grad;
+                } 
+                if (mMode == DIAL_MODE_VINTAGE)
+                {
+                    drawVintageArc(i);
                 }
 
                 //rotate 
@@ -197,6 +219,12 @@ namespace DialControl
                 stopX = newPoint.X; stopY = newPoint.Y;
                  
 
+            }
+
+            //for vintage arc,draw from last point to first point
+            if (mMode == DIAL_MODE_VINTAGE)
+            {
+                drawVintageArc(0);
             }
             placeMarker(mCurrMarkerPos);
         }
@@ -326,7 +354,63 @@ namespace DialControl
 
             }
         }
-     
+        
+        private void drawVintageArc(int elem)
+        {
+            Point startPt = new Point(0,0);
+            Point endPt = new Point(0,0);
+
+            if (elem > 0)
+            {
+                startPt = (Point)mArrOrigPositions[elem - 1];
+                endPt = (Point)mArrOrigPositions[elem];
+            } else
+            {
+                startPt = (Point)mArrOrigPositions[mArrOrigPositions.Count - 1];
+                endPt = (Point)mArrOrigPositions[elem];
+            }
+                Line lnTemp = new Line();
+                lnTemp.X1 = startPt.X; lnTemp.Y1 = startPt.Y; lnTemp.X2 = endPt.X; lnTemp.Y2 = endPt.Y;
+                lnTemp.StrokeThickness = 4; lnTemp.Stroke = new SolidColorBrush(Colors.Red);
+                //canvas.Children.Add(lnTemp);
+                
+
+                var g = new StreamGeometry();
+
+                using (var gc = g.Open())
+                {
+                    gc.BeginFigure(
+                    startPoint: new Point(startPt.X, startPt.Y),
+                        isFilled: false,
+                        isClosed: false);
+
+                    gc.ArcTo(
+                        point: new Point(endPt.X, endPt.Y),
+                        size: new Size(100, 100),
+                        rotationAngle: 0d,
+                        isLargeArc: false,
+                        sweepDirection: SweepDirection.Counterclockwise,
+                        isStroked: true,
+                        isSmoothJoin: false);
+                }
+
+
+                var arcPath = new Path
+                {
+                    Stroke = Brushes.DarkGray,
+                    StrokeThickness = 6,
+                    Data = g
+                };
+
+                 
+                mArrArcs.Add(arcPath);
+               
+                canvas.Children.Add(arcPath);
+
+           
+           
+        }
+        
         private void dial_MouseDown(object sender, MouseButtonEventArgs e)
         {
             processMarkerPos(e);
