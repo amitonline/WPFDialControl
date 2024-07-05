@@ -34,8 +34,9 @@ namespace WpfDial
         private const int DIAL_MODE_MODERN = 0;
         private const int DIAL_MODE_FLAT = 1;
         private const int DIAL_MODE_VINTAGE = 2;
-
         public enum MODE_ENUM { MODERN , FLAT, VINTAGE};
+
+        public enum ANGLE_ENUM { ANGLE_15, ANGLE_40, ANGLE_45, ANGLE_60, ANGLE_90 };
 
         private double mDialX = 0;
         private double mDialY = 0;
@@ -62,6 +63,7 @@ namespace WpfDial
 
         #region SET PROPERTIES-----------------------------------------------------------------
 
+        //DIAL MODE
         public static readonly DependencyProperty SetModeProperty =
         DependencyProperty.Register("Mode", typeof(MODE_ENUM), typeof(UserControl1),
                                      new FrameworkPropertyMetadata(onSetModeChanged)
@@ -85,11 +87,61 @@ namespace WpfDial
         private void onSetModeChanged(DependencyPropertyChangedEventArgs e)
         {
             mMode = (int) e.NewValue;
-            init();
                 
         }
 
+        //ANGLE
+        public static readonly DependencyProperty SetAngleProperty =
+          DependencyProperty.Register("Angle", typeof(ANGLE_ENUM), typeof(UserControl1),
+                                       new FrameworkPropertyMetadata(onSetAngleChanged)
+                                       {
+                                           BindsTwoWayByDefault = true
+                                       }
+          );
+
+        public ANGLE_ENUM  Angle
+        {
+            get { return (ANGLE_ENUM)GetValue(SetAngleProperty); }
+            set { SetValue(SetAngleProperty, value); }
+        }
+        private static void onSetAngleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetAngleChanged(e);
+        }
+
+        private void onSetAngleChanged(DependencyPropertyChangedEventArgs e)
+        {
+            mMarkerAngle = angleEnumToAngle((ANGLE_ENUM) e.NewValue);
+
+        }
         #endregion ------------------------------------------------------------------------
+
+        private double angleEnumToAngle(ANGLE_ENUM a)
+        {
+            double retVal = 0.0;
+            switch (a)
+            {
+                case ANGLE_ENUM.ANGLE_15:
+                    retVal = 15;
+                    break;
+                case ANGLE_ENUM.ANGLE_40:
+                    retVal = 40;
+                    break;
+                case ANGLE_ENUM.ANGLE_45:
+                    retVal = 45;
+                    break;
+                case ANGLE_ENUM.ANGLE_60:
+                    retVal = 60;
+                    break;
+                case ANGLE_ENUM.ANGLE_90:
+                    retVal = 90;
+                    break;
+            }
+            return retVal;
+        }
+
 
         private void init()
         {
@@ -111,9 +163,9 @@ namespace WpfDial
             stopY = startY;
             Point ptCenter = new Point(mDialX, mDialY);
 
+            mMarkerAngle = angleEnumToAngle(Angle);
             mMarkerCount = Convert.ToInt16(360 / mMarkerAngle);
 
-            //mMarkerCount = 4;
             double targetX = 0;
             double slope = 0;
             double targetY = 0;
