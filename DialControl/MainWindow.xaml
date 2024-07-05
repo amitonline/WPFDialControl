@@ -3,26 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:app="clr-namespace:WpfDial;assembly=WpfDial"
         xmlns:local="clr-namespace:DialControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
-    <Canvas Height="400" Width="400" Name="canvas"  >
-        <Ellipse Width="150" Height="150" Canvas.Left="100" Canvas.Top="25"
-                 StrokeThickness="4" Name="dial" MouseDown="dial_MouseDown">
-                      <Ellipse.Effect>
-                        <DropShadowEffect Color="Gray" BlurRadius="10"   x:Name="dialShadow"/>
-                     </Ellipse.Effect>
-                    <Ellipse.Fill>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1" x:Name="dialGradBrush">
-                    <GradientStop Color="White" Offset="0.0" />
-                    <GradientStop Color="DarkGray" Offset="1.0" />
-                </LinearGradientBrush>
-            </Ellipse.Fill>
-        </Ellipse>
-        <Ellipse Width="50" Height="50" Canvas.Left="100" Canvas.Top="25"
-         StrokeThickness="4" Name="dialVintage" Fill="DarkGray" Visibility="Hidden">
-        </Ellipse>
-        <Line Name="linePointer" StrokeThickness="1" Stroke="DarkGray" X1="9" Y1="2" X2="190" Y2="0" ></Line>
-       
-    </Canvas>
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <app:UserControl1 Name="dial1" Grid.Row="1" Grid.Column="0"  Padding="4,0,0,0" Mode="VINTAGE"></app:UserControl1>
+    </Grid>
 </Window>

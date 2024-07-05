@@ -9,4 +9,8 @@
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WpfDial\WpfDial.csproj" />
+  </ItemGroup>
+
 </Project>
