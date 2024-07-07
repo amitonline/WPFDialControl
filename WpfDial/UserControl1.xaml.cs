@@ -54,12 +54,30 @@ namespace WpfDial
 
         private int mMode = DIAL_MODE_FLAT;      // dial mode
 
+        public static readonly RoutedEvent DialClickEvent =
+        EventManager.RegisterRoutedEvent("DialClick",
+                     RoutingStrategy.Bubble, typeof(RoutedEventHandler),
+                     typeof(UserControl1));
+
+     
         public UserControl1()
         {
             InitializeComponent();
             SetCurrentValue(SetModeProperty, MODE_ENUM.MODERN);
         }
 
+        public event RoutedEventHandler DialClick
+        {
+            add { AddHandler(DialClickEvent, value); }
+            remove { RemoveHandler(DialClickEvent, value); }
+        }
+
+        void RaiseDialClickEvent()
+        {
+            RoutedEventArgs newEventArgs =
+                    new RoutedEventArgs(UserControl1.DialClickEvent);
+            RaiseEvent(newEventArgs);
+        }
 
         #region SET PROPERTIES-----------------------------------------------------------------
 
@@ -507,6 +525,7 @@ namespace WpfDial
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             processMarkerPos(e);
+            RaiseDialClickEvent();
         }
     }
 }

@@ -35,7 +35,9 @@ namespace DialControl
            
         }
 
-         
-       
+        private void dial1_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            string xx = "";
+        }
     }
 }
