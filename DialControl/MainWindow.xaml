@@ -15,7 +15,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <app:UserControl1 Name="dial1" Grid.Row="1" Grid.Column="0"  Padding="4,0,0,0" Mode="FLAT" Angle="ANGLE_90"
-                          MouseDown="dial1_MouseDown"></app:UserControl1>
+        <app:UserControl1 Name="dial1" Grid.Row="1" Grid.Column="0"  Padding="4,0,0,0" Mode="MODERN" Angle="ANGLE_40" DialClick="dial1_DialClick"
+                         ></app:UserControl1>
     </Grid>
 </Window>

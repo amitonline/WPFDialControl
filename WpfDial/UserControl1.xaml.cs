@@ -72,10 +72,10 @@ namespace WpfDial
             remove { RemoveHandler(DialClickEvent, value); }
         }
 
-        void RaiseDialClickEvent()
+        void RaiseDialClickEvent(int val)
         {
-            RoutedEventArgs newEventArgs =
-                    new RoutedEventArgs(UserControl1.DialClickEvent);
+            DialClickRoutedEventArgs newEventArgs =
+                    new DialClickRoutedEventArgs(UserControl1.DialClickEvent, val);
             RaiseEvent(newEventArgs);
         }
 
@@ -525,7 +525,32 @@ namespace WpfDial
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             processMarkerPos(e);
-            RaiseDialClickEvent();
+            RaiseDialClickEvent(mCurrMarkerPos);
         }
     }
+
+
+    #region  DIALCLICK ROUTEDEVENTARGS--------------------------------------------------------
+
+    public class DialClickRoutedEventArgs : RoutedEventArgs
+    {
+        private readonly int selectedPos;
+
+        public DialClickRoutedEventArgs(RoutedEvent routedEvent,
+                                          int selectedItem)
+            : base(routedEvent)
+        {
+            this.selectedPos = selectedItem;
+        }
+
+        public int SelectedPos
+        {
+            get
+            {
+                return selectedPos;
+            }
+        }
+    }
+
+    #endregion
 }

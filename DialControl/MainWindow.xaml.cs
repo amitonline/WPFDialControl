@@ -13,6 +13,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfDial;
 using static System.Formats.Asn1.AsnWriter;
 
 namespace DialControl
@@ -35,9 +36,10 @@ namespace DialControl
            
         }
 
-        private void dial1_MouseDown(object sender, MouseButtonEventArgs e)
+        private void dial1_DialClick(object sender, RoutedEventArgs e)
         {
-            string xx = "";
+            DialClickRoutedEventArgs args = (DialClickRoutedEventArgs)e;
+            int markerPos = args.SelectedPos;
         }
     }
 }
