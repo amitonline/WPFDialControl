@@ -30,6 +30,8 @@ namespace WpfDial
         private const double LINE_PART_TO_HIDE = 0.90;
         private const double LINE_PART_TO_HIDE_FOR_MARKER = 0.60;
         private const int INNER_DIAL_SIZE_RATIO = 3; // how much smaller will be vintage dial to the main dial
+        private const int MIN_SIZE = 50;     // min width and height of dial
+        private const int MAX_SIZE = 250;    // max width and height of dial
 
         private const int DIAL_MODE_MODERN = 0;
         private const int DIAL_MODE_FLAT = 1;
@@ -183,7 +185,7 @@ namespace WpfDial
 
             mMarkerAngle = angleEnumToAngle(Angle);
             mMarkerCount = Convert.ToInt16(360 / mMarkerAngle);
-
+            //mMarkerCount = 5;
             double targetX = 0;
             double slope = 0;
             double targetY = 0;
@@ -295,6 +297,15 @@ namespace WpfDial
                             markerX = stopX;
                             double adjustY2 = ((stopY - mDialY) * LINE_PART_TO_HIDE_FOR_MARKER);
                             markerY = mDialY + adjustY2;
+
+                        } else  if (diffX < 0.0) {
+                                double adjustX = ((stopX - mDialX) * LINE_PART_TO_HIDE);
+                                targetX = mDialX + adjustX;
+                                targetY = stopY;
+
+                                double adjustX2 = ((stopX - mDialX) * LINE_PART_TO_HIDE_FOR_MARKER);
+                                markerX = mDialX + adjustX2;
+                                markerY = stopY;
 
                         }
                     }
