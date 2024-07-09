@@ -18,8 +18,8 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <app:UserControl1 Name="dial1" Grid.Row="1" Grid.Column="0"  Padding="4,0,0,0" Mode="MODERN" Angle="ANGLE_15" DialClick="dial1_DialClick"
-                         DialSize="150"></app:UserControl1>
-        <app:UserControl1 Name="dial2" Grid.Row="1" Grid.Column="1"  Padding="4,0,0,0" Mode="MODERN" Angle="ANGLE_45"  ></app:UserControl1>
-        <app:UserControl1 Name="dial3" Grid.Row="1" Grid.Column="2"  Padding="4,0,0,0" Mode="FLAT" Angle="ANGLE_45"  ></app:UserControl1>
+                         DialSize="350"></app:UserControl1>
+        <app:UserControl1 Name="dial2" Grid.Row="1" Grid.Column="1"  Padding="4,0,0,0" Mode="MODERN" Angle="ANGLE_45"  DialSize="250" ></app:UserControl1>
+        <app:UserControl1 Name="dial3" Grid.Row="1" Grid.Column="2"  Padding="4,0,0,0" Mode="FLAT" Angle="ANGLE_45"  DialSize="250" ></app:UserControl1>
     </Grid>
 </Window>

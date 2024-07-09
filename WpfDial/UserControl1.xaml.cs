@@ -173,11 +173,7 @@ namespace WpfDial
         private void onSetDialSizeChanged(DependencyPropertyChangedEventArgs e)
         {
             int newVal = (int)e.NewValue;
-            if (newVal < MIN_SIZE)
-                newVal = MIN_SIZE;
-            if (newVal > MAX_SIZE)
-                newVal = MAX_SIZE;
-            mSize = (int)e.NewValue;
+            validateSize(newVal);
             init();
 
 
@@ -185,6 +181,16 @@ namespace WpfDial
 
 
         #endregion ------------------------------------------------------------------------
+
+        private void validateSize(int newVal)
+        {
+            if (newVal < MIN_SIZE)
+                newVal = MIN_SIZE;
+            if (newVal > MAX_SIZE)
+                newVal = MAX_SIZE;
+            mSize = newVal;
+        }
+
 
         private double angleEnumToAngle(ANGLE_ENUM a)
         {
@@ -221,12 +227,18 @@ namespace WpfDial
 
             // calc.sizes of dial and canvas 
             this.Width = mSize; this.Height = mSize;
-
             canvas.Width = mSize;  canvas.Height = mSize;
+            
             dial.Width = canvas.ActualWidth + DIAL_DIFF_IN_SIZE; dial.Height = canvas.ActualHeight + DIAL_DIFF_IN_SIZE;
+            Canvas.SetLeft(canvas, 0);
+            Canvas.SetTop(canvas, 0);
+
+            Canvas.SetLeft(dial, Canvas.GetLeft(canvas) + 50);
+            Canvas.SetTop(dial, Canvas.GetTop(canvas) + 50);
 
             //calc center point of main ellipse
             mDialRadius = (dial.ActualWidth) / 2;
+            mDialRadius = (mSize +DIAL_DIFF_IN_SIZE) / 2;
             mDialX = Canvas.GetLeft(dial) + mDialRadius;
             mDialY = Canvas.GetTop(dial) + mDialRadius;
 
