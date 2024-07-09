@@ -68,6 +68,12 @@ namespace WpfDial
             SetCurrentValue(SetModeProperty, MODE_ENUM.MODERN);
         }
 
+        public int getMaxMarkers()
+        {
+            return mMarkerCount;
+        }
+
+
         public event RoutedEventHandler DialClick
         {
             add { AddHandler(DialClickEvent, value); }
@@ -136,6 +142,8 @@ namespace WpfDial
             mMarkerAngle = angleEnumToAngle((ANGLE_ENUM) e.NewValue);
 
         }
+
+       
         #endregion ------------------------------------------------------------------------
 
         private double angleEnumToAngle(ANGLE_ENUM a)

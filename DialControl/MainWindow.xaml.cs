@@ -40,6 +40,8 @@ namespace DialControl
         {
             DialClickRoutedEventArgs args = (DialClickRoutedEventArgs)e;
             int markerPos = args.SelectedPos;
+            int maxMakers = dial1.getMaxMarkers();
+
         }
     }
 }
