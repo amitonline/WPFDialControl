@@ -30,8 +30,9 @@ namespace WpfDial
         private const double LINE_PART_TO_HIDE = 0.90;
         private const double LINE_PART_TO_HIDE_FOR_MARKER = 0.60;
         private const int INNER_DIAL_SIZE_RATIO = 3; // how much smaller will be vintage dial to the main dial
-        private const int MIN_SIZE = 50;     // min width and height of dial
-        private const int MAX_SIZE = 250;    // max width and height of dial
+        private const int MIN_SIZE = 150;     // min width and height of canvas
+        private const int MAX_SIZE = 450;    // max width and height of canvas
+        private const int DIAL_DIFF_IN_SIZE = -100; // how much smaller will dial be in relation to component size
 
         private const int DIAL_MODE_MODERN = 0;
         private const int DIAL_MODE_FLAT = 1;
@@ -55,6 +56,10 @@ namespace WpfDial
         private ArrayList mArrArcs = new ArrayList(); //array of selection arcs
 
         private int mMode = DIAL_MODE_FLAT;      // dial mode
+
+        private int mSize = 250;                  // current size for user control
+
+        private bool mReady = false;            // becomes true when component has rendered
 
         public static readonly RoutedEvent DialClickEvent =
         EventManager.RegisterRoutedEvent("DialClick",
@@ -143,7 +148,42 @@ namespace WpfDial
 
         }
 
-       
+
+        //DIAL SIZE
+        public static readonly DependencyProperty SetDialSizeProperty =
+        DependencyProperty.Register("DialSize", typeof(int), typeof(UserControl1),
+                                     new FrameworkPropertyMetadata(onSetDialSizeChanged)
+                                     {
+                                         BindsTwoWayByDefault = true
+                                     }
+        );
+
+        public int DialSize
+        {
+            get { return (int )GetValue(SetDialSizeProperty); }
+            set { SetValue(SetDialSizeProperty, value); }
+        }
+        private static void onSetDialSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetDialSizeChanged(e);
+        }
+
+        private void onSetDialSizeChanged(DependencyPropertyChangedEventArgs e)
+        {
+            int newVal = (int)e.NewValue;
+            if (newVal < MIN_SIZE)
+                newVal = MIN_SIZE;
+            if (newVal > MAX_SIZE)
+                newVal = MAX_SIZE;
+            mSize = (int)e.NewValue;
+            init();
+
+
+        }
+
+
         #endregion ------------------------------------------------------------------------
 
         private double angleEnumToAngle(ANGLE_ENUM a)
@@ -173,12 +213,20 @@ namespace WpfDial
 
         private void init()
         {
+            if (!mReady)
+                return;
             Canvas.SetZIndex(dial, DIAL_ZINDEX);
             Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
             Canvas.SetZIndex(dialVintage, VINTAGEDIAL_ZINDEX);
 
+            // calc.sizes of dial and canvas 
+            this.Width = mSize; this.Height = mSize;
+
+            canvas.Width = mSize;  canvas.Height = mSize;
+            dial.Width = canvas.ActualWidth + DIAL_DIFF_IN_SIZE; dial.Height = canvas.ActualHeight + DIAL_DIFF_IN_SIZE;
+
             //calc center point of main ellipse
-            mDialRadius = (dial.Width) / 2;
+            mDialRadius = (dial.ActualWidth) / 2;
             mDialX = Canvas.GetLeft(dial) + mDialRadius;
             mDialY = Canvas.GetTop(dial) + mDialRadius;
 
@@ -538,6 +586,7 @@ namespace WpfDial
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            mReady = true;
             init();
         }
 
@@ -545,6 +594,11 @@ namespace WpfDial
         {
             processMarkerPos(e);
             RaiseDialClickEvent(mCurrMarkerPos);
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            init();
         }
     }
 

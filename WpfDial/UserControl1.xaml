@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfDial"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded" >
-    <Canvas Height="400" Width="400" Name="canvas"  >
-        <Ellipse Width="150" Height="150" Canvas.Left="100" Canvas.Top="25"
+             d:DesignHeight="250" d:DesignWidth="250" Loaded="UserControl_Loaded" Background="Red" SizeChanged="UserControl_SizeChanged" >
+    <Canvas Height="250" Width="250" Name="canvas" >
+        <Ellipse Width="150" Height="150" Canvas.Left="50" Canvas.Top="50"
            StrokeThickness="4" Name="dial" MouseDown="UserControl_MouseDown">
             <Ellipse.Effect>
                 <DropShadowEffect Color="Gray" BlurRadius="10"   x:Name="dialShadow"/>
