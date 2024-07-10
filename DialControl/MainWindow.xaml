@@ -6,10 +6,9 @@
         xmlns:app="clr-namespace:WpfDial;assembly=WpfDial"
         xmlns:local="clr-namespace:DialControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="650" Width="900" Loaded="Window_Loaded" >
+        Title="MainWindow" Height="350" Width="900" Loaded="Window_Loaded" >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -39,5 +38,7 @@
             <app:UserControl1 HorizontalAlignment="Center" Name="dial4" Mode="FLAT" Angle="ANGLE_45"  DialSize="200"  DialClick="dial4_DialClick"></app:UserControl1>
             <TextBlock HorizontalAlignment="Center" Name="lblBass" Text="0" FontSize="18" ></TextBlock>
         </StackPanel>
+       
+
     </Grid>
 </Window>
