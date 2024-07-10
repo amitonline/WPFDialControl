@@ -78,6 +78,22 @@ namespace WpfDial
             return mMarkerCount;
         }
 
+        public bool isReady() { return mReady; }
+
+        public bool setCurrMarker(int val)
+        {
+            if (!mReady)
+                return false;
+            //validate curr marker pos if it was externally assigned
+            if (val < 0)
+                val = 0;
+            if (val > mMarkerCount)
+                val= mMarkerCount;
+
+            mCurrMarkerPos = val;
+            init();
+            return true;
+        }
 
         public event RoutedEventHandler DialClick
         {
@@ -221,6 +237,7 @@ namespace WpfDial
         {
             if (!mReady)
                 return;
+
             Canvas.SetZIndex(dial, DIAL_ZINDEX);
             Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
             Canvas.SetZIndex(dialVintage, VINTAGEDIAL_ZINDEX);
