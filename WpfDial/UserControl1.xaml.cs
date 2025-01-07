@@ -460,6 +460,10 @@ namespace WpfDial
         }
 
 
+        /// <summary>
+        /// Do post processing when mouse click happens
+        /// </summary>
+        /// <param name="e">mouseEventArgs</param>
         private void processMarkerPos(MouseEventArgs e)
         {
             if (mMousePosProcessing)
@@ -491,6 +495,43 @@ namespace WpfDial
                 placeMarker(mCurrMarkerPos);
                 if (mMode == DIAL_MODE_FLAT)
                     drawArc(mCurrMarkerPos, e.RightButton == MouseButtonState.Pressed);
+            }
+            mMousePosProcessing = false;
+        }
+
+        /// <summary>
+        /// Do post processing when mouse wheel is moved. Same logic as above function.
+        /// </summary>
+        /// <param name="delta">change value - either >0 or < 0</param>
+        private void processMarkerPosForWheel(int delta)
+        {
+            if (mMousePosProcessing)
+                return;
+            mMousePosProcessing = true;
+            bool toUpdate = true;
+            if (delta < 0) // decrease
+            {
+                mCurrMarkerPos--;
+                if (mCurrMarkerPos < 0)
+                {
+                    mCurrMarkerPos = 0;
+                    toUpdate = false;
+                }
+            }
+            if (delta > 0)
+            { // increase            
+                mCurrMarkerPos++;
+                if (mCurrMarkerPos >= mMarkerCount)
+                {
+                    mCurrMarkerPos = mMarkerCount - 1;
+                    toUpdate = false;
+                }
+            }
+            if (toUpdate)
+            {
+                placeMarker(mCurrMarkerPos);
+                if (mMode == DIAL_MODE_FLAT)
+                    drawArc(mCurrMarkerPos, delta < 0);
             }
             mMousePosProcessing = false;
         }
@@ -628,6 +669,13 @@ namespace WpfDial
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             init();
+        }
+
+        private void dial_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            int change = e.Delta;
+            processMarkerPosForWheel(change);
+            RaiseDialClickEvent(mCurrMarkerPos);
         }
     }
 
