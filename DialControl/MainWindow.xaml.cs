@@ -45,6 +45,7 @@ namespace DialControl
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            dial1.PointerColor = Brushes.Aquamarine;
         }
 
         private void dial1_DialClick(object sender, RoutedEventArgs e)

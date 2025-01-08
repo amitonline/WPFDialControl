@@ -71,6 +71,8 @@ namespace WpfDial
         {
             InitializeComponent();
             SetCurrentValue(SetModeProperty, MODE_ENUM.MODERN);
+            PointerColor = Brushes.DarkGray;
+
         }
 
         public int getMaxMarkers()
@@ -195,6 +197,34 @@ namespace WpfDial
 
         }
 
+        //LINEPOINTER COLOR
+        public static readonly DependencyProperty SetPointerColorProperty =
+        DependencyProperty.Register("PointerColor", typeof(SolidColorBrush), typeof(UserControl1),
+                                     new FrameworkPropertyMetadata(onSetPointerColorChanged)
+                                     {
+                                         BindsTwoWayByDefault = true
+                                     }
+        );
+
+        public SolidColorBrush PointerColor
+        {
+            get { return (SolidColorBrush)GetValue(SetPointerColorProperty); }
+            set { SetValue(SetPointerColorProperty, value); }
+        }
+        private static void onSetPointerColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetPointerColorChanged(e);
+        }
+
+        private void onSetPointerColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            SolidColorBrush newVal = (SolidColorBrush)e.NewValue;
+            init();
+
+
+        }
 
         #endregion ------------------------------------------------------------------------
 
@@ -237,7 +267,6 @@ namespace WpfDial
         {
             if (!mReady)
                 return;
-
             Canvas.SetZIndex(dial, DIAL_ZINDEX);
             Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
             Canvas.SetZIndex(dialVintage, VINTAGEDIAL_ZINDEX);
@@ -577,7 +606,7 @@ namespace WpfDial
 
                 var arcPath = new Path
                 {
-                    Stroke = Brushes.DarkGray,
+                    Stroke = PointerColor,
                     StrokeThickness = 6,
                     Data = g
                 };
