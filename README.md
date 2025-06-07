@@ -1,5 +1,5 @@
 # WPFDialControl
-WPD Dial widget for wpf applications
+WPF Dial widget for wpf applications
 Still WIP. Works with NET 8.0 and above
 Three modes: Modern, Flat and Vintage
 
