@@ -572,17 +572,32 @@ namespace WpfDial
             linePointer.Y2 = pt.Y;
 
         }
+        /// <summary>
+        /// Get a point which lies on the circumference of a circle 
+        /// </summary>
+        /// <param name="radius"></param>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="val">angle from the center. 0 deg is from center to horiz right</param>
+        /// <returns>Point object</returns>
+        private Point getPointOnCircumference(double radius, double centerX, double centerY, double val)
+        {
+            double radians = (Math.PI / 180) * val;
+            double x = (radius * Math.Cos(radians)) + centerX;
+            double y = (radius * Math.Sin(radians)) + centerY;
+            return new Point(x, y);
+        }
+
 
         private void drawArc(int elem, bool remove = false)
         {
             if (elem > 0 && !remove)
             {
-                Point startPt = (Point)mArrOrigPositions[elem - 1];
-                Point endPt = (Point)mArrOrigPositions[elem];
-                Line lnTemp = new Line();
-                lnTemp.X1 = startPt.X; lnTemp.Y1 = startPt.Y; lnTemp.X2 = endPt.X; lnTemp.Y2 = endPt.Y;
-                lnTemp.StrokeThickness = 4; lnTemp.Stroke = new SolidColorBrush(Colors.Red);
-                //canvas.Children.Add(lnTemp);
+                double finalRadius = mDialRadius + 10;
+                double arcAngle = mMarkerAngle * elem;
+                SweepDirection sweep = arcAngle < 0 ? SweepDirection.Counterclockwise : SweepDirection.Clockwise;
+                Point startPt = getPointOnCircumference(finalRadius, mDialX, mDialY, 0);
+                Point endPt = getPointOnCircumference(finalRadius, mDialX, mDialY, arcAngle);
 
                 var g = new StreamGeometry();
 
@@ -595,12 +610,61 @@ namespace WpfDial
 
                     gc.ArcTo(
                         point: new Point(endPt.X, endPt.Y),
-                        size: new Size(100, 100),
+                        size: new Size(finalRadius, finalRadius),
+                        rotationAngle: 0d,
+                        isLargeArc: Math.Abs(arcAngle % 360) > 180,
+                        sweepDirection: sweep,
+                        isStroked: true,
+                        isSmoothJoin: true);
+                }
+
+
+                var arcPath = new Path
+                {
+                    Stroke = PointerColor,
+                    StrokeThickness = 6,
+                    Data = g
+                };
+                if (mArrArcs.Count < elem)
+                    mArrArcs.Add(arcPath);
+                else
+                    mArrArcs[elem - 1] = arcPath;
+                canvas.Children.Add(arcPath);
+
+            }
+            else if (remove)
+            {
+                Path thisPath = (Path)mArrArcs[elem];
+                canvas.Children.Remove(thisPath);
+
+
+            }
+        }
+
+        private void olddrawArc(int elem, bool remove = false)
+        {
+            if (elem > 0 && !remove)
+            {
+                Point startPt = (Point)mArrOrigPositions[elem - 1];
+                Point endPt = (Point)mArrOrigPositions[elem];
+               
+                var g = new StreamGeometry();
+
+                using (var gc = g.Open())
+                {
+                    gc.BeginFigure(
+                    startPoint: new Point(startPt.X, startPt.Y),
+                        isFilled: false,
+                        isClosed: false);
+
+                    gc.ArcTo(
+                        point: new Point(endPt.X, endPt.Y),
+                        size: new Size(200, 200),
                         rotationAngle: 0d,
                         isLargeArc: false,
                         sweepDirection: SweepDirection.Clockwise,
                         isStroked: true,
-                        isSmoothJoin: false);
+                        isSmoothJoin: true);
                 }
 
 
