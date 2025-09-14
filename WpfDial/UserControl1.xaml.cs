@@ -513,9 +513,9 @@ namespace WpfDial
             if (e.LeftButton == MouseButtonState.Pressed)
             { // increase            
                 mCurrMarkerPos++;
-                if (mCurrMarkerPos >= mMarkerCount)
+                if (mCurrMarkerPos > mMarkerCount)
                 {
-                    mCurrMarkerPos = mMarkerCount - 1;
+                    mCurrMarkerPos = mMarkerCount;
                     toUpdate = false;
                 }
             }
@@ -550,9 +550,9 @@ namespace WpfDial
             if (delta > 0)
             { // increase            
                 mCurrMarkerPos++;
-                if (mCurrMarkerPos >= mMarkerCount)
+                if (mCurrMarkerPos > mMarkerCount)
                 {
-                    mCurrMarkerPos = mMarkerCount - 1;
+                    mCurrMarkerPos = mMarkerCount ;
                     toUpdate = false;
                 }
             }
@@ -597,6 +597,9 @@ namespace WpfDial
                 double arcAngle = mMarkerAngle * elem;
                 SweepDirection sweep = arcAngle < 0 ? SweepDirection.Counterclockwise : SweepDirection.Clockwise;
                 Point startPt = getPointOnCircumference(finalRadius, mDialX, mDialY, 0);
+                // if angle is 360 then decrement it otherwise no arc will be drawn at 360 deg
+                if (arcAngle > 359)
+                    arcAngle = 359;
                 Point endPt = getPointOnCircumference(finalRadius, mDialX, mDialY, arcAngle);
 
                 var g = new StreamGeometry();
