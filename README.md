@@ -3,6 +3,10 @@ WPF Dial widget for wpf applications
 Still WIP. Works with NET 8.0 and above
 Three modes: Modern, Flat and Vintage
 
+#Sep 18, 2025
+Customize colors of the ticks, dial and pointer
+
+<img width="886" height="335" alt="Screenshot 2025-09-18 184514" src="https://github.com/user-attachments/assets/fc460237-53ab-4166-8795-9c5adca8d3f5" />
 
 #June 7, 2025
 Improved the Flat Look :
