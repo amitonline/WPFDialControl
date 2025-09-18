@@ -6,7 +6,7 @@
         xmlns:app="clr-namespace:WpfDial;assembly=WpfDial"
         xmlns:local="clr-namespace:DialControl"
         mc:Ignorable="d"
-        Background="DarkGray"
+        Background="White"
         Title="MainWindow" Height="350" Width="900" Loaded="Window_Loaded" >
     <Grid>
         <Grid.RowDefinitions>
@@ -20,24 +20,30 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0">
             <TextBlock HorizontalAlignment="Center" Text="MASTER VOLUME" FontSize="16" ></TextBlock>
-            <app:UserControl1 Name="dial1" HorizontalAlignment="Center"  Mode="MODERN" Angle="ANGLE_15" DialClick="dial1_DialClick"
+            <app:UserControl1 Name="dial1" HorizontalAlignment="Center"  Mode="MODERN" 
+                              FillStartColor="Black" FillStopColor="DarkGray"
+                              Angle="ANGLE_15" DialClick="dial1_DialClick"
                          DialSize="200" ></app:UserControl1>
             <TextBlock HorizontalAlignment="Center" Name="lblVolume" Text="0dB" FontSize="18" ></TextBlock>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="1">
             <TextBlock HorizontalAlignment="Center" Text="REVERB" FontSize="14" ></TextBlock>
-            <app:UserControl1 HorizontalAlignment="Center" Name="dial2"  Mode="VINTAGE" Angle="ANGLE_45" 
+            <app:UserControl1 HorizontalAlignment="Center" Name="dial2"  Mode="VINTAGE" Angle="ANGLE_45" VintageCenterColor="BlanchedAlmond"
                               PointerColor="LightBlue" DialSize="20"  DialClick="dial2_DialClick"></app:UserControl1>
             <TextBlock HorizontalAlignment="Center" Name="lblReverb" Text="0" FontSize="18" ></TextBlock>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2">
             <TextBlock HorizontalAlignment="Center" Text="TREBLE" FontSize="14" ></TextBlock>
-            <app:UserControl1 HorizontalAlignment="Center"  PointerColor="PaleGreen" Name="dial3"  Mode="FLAT" Angle="ANGLE_40"  DialSize="200"  DialClick="dial3_DialClick"  ></app:UserControl1>
+            <app:UserControl1 HorizontalAlignment="Center"  PointerColor="PaleGreen" Name="dial3"  Mode="FLAT" 
+                              Angle="ANGLE_40"  DialSize="200" FillStartColor="Azure" FillStopColor="Black"  DialClick="dial3_DialClick"  ></app:UserControl1>
             <TextBlock HorizontalAlignment="Center" Name="lblTreble" Text="0" FontSize="18" ></TextBlock>
         </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="3">
             <TextBlock HorizontalAlignment="Center" Text="BASS" FontSize="14" ></TextBlock>
-            <app:UserControl1 HorizontalAlignment="Center" Name="dial4" Mode="FLAT" PointerColor="Bisque" Angle="ANGLE_40"  DialSize="200"  DialClick="dial4_DialClick"></app:UserControl1>
+            <app:UserControl1 HorizontalAlignment="Center" Name="dial4" Mode="FLAT"
+                              PointerColor="Bisque" Angle="ANGLE_40"  DialSize="200"  
+                              FillStartColor="Azure" FillStopColor="Black"
+                              DialClick="dial4_DialClick"></app:UserControl1>
             <TextBlock HorizontalAlignment="Center" Name="lblBass" Text="0" FontSize="18" ></TextBlock>
         </StackPanel>
        

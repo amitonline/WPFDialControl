@@ -37,6 +37,7 @@ namespace WpfDial
         private const int DIAL_MODE_MODERN = 0;
         private const int DIAL_MODE_FLAT = 1;
         private const int DIAL_MODE_VINTAGE = 2;
+
         public enum MODE_ENUM { MODERN , FLAT, VINTAGE};
 
         public enum ANGLE_ENUM { ANGLE_15, ANGLE_40, ANGLE_45, ANGLE_60, ANGLE_90 };
@@ -49,6 +50,10 @@ namespace WpfDial
         private int mMarkerCount = 0;
         private ArrayList mArrOrigPositions = new ArrayList(); // complete lines x,y pos for the marker dial to move through
         private ArrayList mArrPositions = new ArrayList(); // adjusted x,y pos for the marker dial to move through
+
+        private Color mFillStartColor = Colors.White;
+        private Color mFillStopColor = Colors.Black;
+        private Color mVintageCenterColor = Colors.LightGray;
 
         private int mCurrMarkerPos = 0;
         private bool mMousePosProcessing = false;   // becomes true when mouse pos is being calculated
@@ -226,6 +231,89 @@ namespace WpfDial
 
         }
 
+
+        //FILL START_COLOR
+        public static readonly DependencyProperty SetFillStartColorProperty =
+          DependencyProperty.Register("FillStartColor", typeof(Color), typeof(UserControl1),
+                                       new FrameworkPropertyMetadata(onSetFillStartColorChanged)
+                                       {
+                                           BindsTwoWayByDefault = true
+                                       }
+          );
+
+        public Color FillStartColor
+        {
+            get { return (Color)GetValue(SetFillStartColorProperty); }
+            set { SetValue(SetFillStartColorProperty, value); }
+        }
+        private static void onSetFillStartColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetFillStartColorChanged(e);
+        }
+
+        private void onSetFillStartColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            mFillStartColor = (Color) e.NewValue;
+
+        }
+
+        //FILL STOP COLOR
+        public static readonly DependencyProperty SetFillStopColorProperty =
+          DependencyProperty.Register("FillStopColor", typeof(Color), typeof(UserControl1),
+                                       new FrameworkPropertyMetadata(onSetFillStopColorChanged)
+                                       {
+                                           BindsTwoWayByDefault = true
+                                       }
+          );
+
+        public Color FillStopColor
+        {
+            get { return (Color)GetValue(SetFillStopColorProperty); }
+            set { SetValue(SetFillStopColorProperty, value); }
+        }
+        private static void onSetFillStopColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetFillStopColorChanged(e);
+        }
+
+        private void onSetFillStopColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            mFillStopColor = (Color)e.NewValue;
+
+        }
+
+        //VINTAGE CENTER COLOR
+        public static readonly DependencyProperty SetVintageCenterColorProperty =
+          DependencyProperty.Register("VintageCenterColorColor", typeof(Color), typeof(UserControl1),
+                                       new FrameworkPropertyMetadata(onSetVintageCenterColorChanged)
+                                       {
+                                           BindsTwoWayByDefault = true
+                                       }
+          );
+
+        public Color VintageCenterColor
+        {
+            get { return (Color)GetValue(SetVintageCenterColorProperty); }
+            set { SetValue(SetVintageCenterColorProperty, value); }
+        }
+        private static void onSetVintageCenterColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetVintageCenterColorChanged(e);
+        }
+
+        private void onSetVintageCenterColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            mVintageCenterColor = (Color)e.NewValue;
+
+        }
+
+
         #endregion ------------------------------------------------------------------------
 
         private void validateSize(int newVal)
@@ -309,6 +397,20 @@ namespace WpfDial
             double markerX = 0.0; double markerY = 0.0;
 
             mMode = (int) Mode;
+            if (mMode == DIAL_MODE_MODERN)
+            {
+               
+                dial.Effect = null;
+                dial.Stroke = new SolidColorBrush(Colors.DarkGray);
+                dial.StrokeThickness = 1;
+                LinearGradientBrush grad = new LinearGradientBrush();
+                grad.StartPoint = new Point(0, 0);
+                grad.EndPoint = new Point(1, 1);
+                grad.GradientStops.Add(new GradientStop(mFillStartColor, 0.0));
+                grad.GradientStops.Add(new GradientStop(mFillStopColor, 1.0));
+                dial.Fill = grad;
+
+            }
             if (mMode == DIAL_MODE_FLAT || mMode == DIAL_MODE_VINTAGE)
             {
                 linePointer.Visibility = Visibility.Hidden;
@@ -318,9 +420,10 @@ namespace WpfDial
                 LinearGradientBrush grad = new LinearGradientBrush();
                 grad.StartPoint = new Point(0, 0);
                 grad.EndPoint = new Point(1, 1);
-                grad.GradientStops.Add(new GradientStop(Colors.White, 0.0));
-                grad.GradientStops.Add(new GradientStop(Colors.White, 1.0));
+                grad.GradientStops.Add(new GradientStop(mFillStartColor, 0.0));
+                grad.GradientStops.Add(new GradientStop(mFillStopColor, 1.0));
                 dial.Fill = grad;
+               
             }
             if (mMode == DIAL_MODE_VINTAGE)
             {
@@ -332,6 +435,7 @@ namespace WpfDial
                 Canvas.SetLeft(dialVintage, Canvas.GetLeft(dial) + mDialRadius - mDialVintageRadius);
                 Canvas.SetTop(dialVintage, Canvas.GetTop(dial) + mDialRadius - mDialVintageRadius);
                 dialVintage.Visibility = Visibility.Visible;
+                dialVintage.Fill = new SolidColorBrush(mVintageCenterColor);
             }
             for (int i = 0; i < mMarkerCount; i++)
             {

@@ -19,8 +19,8 @@
                 </LinearGradientBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <Ellipse Width="50" Height="50" Canvas.Left="100" Canvas.Top="25"
-   StrokeThickness="4" Name="dialVintage" Fill="DarkGray" Visibility="Hidden">
+        <Ellipse Width="50" Height="50" Canvas.Left="100" Canvas.Top="25" StrokeThickness="4" 
+                   Name="dialVintage" Fill="DarkGray" Visibility="Hidden">
         </Ellipse>
         <Line Name="linePointer" StrokeThickness="1" Stroke="DarkGray" X1="9" Y1="2" X2="190" Y2="0" ></Line>
 
