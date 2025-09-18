@@ -54,6 +54,8 @@ namespace WpfDial
         private Color mFillStartColor = Colors.White;
         private Color mFillStopColor = Colors.Black;
         private Color mVintageCenterColor = Colors.LightGray;
+        private Color mTickColor = Colors.Gray;
+        private Color mPointerColor = Colors.Gray;
 
         private int mCurrMarkerPos = 0;
         private bool mMousePosProcessing = false;   // becomes true when mouse pos is being calculated
@@ -76,7 +78,7 @@ namespace WpfDial
         {
             InitializeComponent();
             SetCurrentValue(SetModeProperty, MODE_ENUM.MODERN);
-            PointerColor = Brushes.DarkGray;
+           
 
         }
 
@@ -204,16 +206,16 @@ namespace WpfDial
 
         //LINEPOINTER COLOR
         public static readonly DependencyProperty SetPointerColorProperty =
-        DependencyProperty.Register("PointerColor", typeof(SolidColorBrush), typeof(UserControl1),
+        DependencyProperty.Register("PointerColor", typeof(Color), typeof(UserControl1),
                                      new FrameworkPropertyMetadata(onSetPointerColorChanged)
                                      {
                                          BindsTwoWayByDefault = true
                                      }
         );
 
-        public SolidColorBrush PointerColor
+        public Color PointerColor
         {
-            get { return (SolidColorBrush)GetValue(SetPointerColorProperty); }
+            get { return (Color)GetValue(SetPointerColorProperty); }
             set { SetValue(SetPointerColorProperty, value); }
         }
         private static void onSetPointerColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -225,9 +227,8 @@ namespace WpfDial
 
         private void onSetPointerColorChanged(DependencyPropertyChangedEventArgs e)
         {
-            SolidColorBrush newVal = (SolidColorBrush)e.NewValue;
-            init();
-
+            mPointerColor = (Color)e.NewValue;
+          
 
         }
 
@@ -314,6 +315,34 @@ namespace WpfDial
         }
 
 
+        //TICK COLOR
+        public static readonly DependencyProperty SetTickColorProperty =
+          DependencyProperty.Register("TickColor", typeof(Color), typeof(UserControl1),
+                                       new FrameworkPropertyMetadata(onSetTickColorChanged)
+                                       {
+                                           BindsTwoWayByDefault = true
+                                       }
+          );
+
+        public Color TickColor
+        {
+            get { return (Color)GetValue(SetTickColorProperty); }
+            set { SetValue(SetTickColorProperty, value); }
+        }
+        private static void onSetTickColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+            UserControl1 UserControl1Control = d as UserControl1;
+            UserControl1Control.onSetTickColorChanged(e);
+        }
+
+        private void onSetTickColorChanged(DependencyPropertyChangedEventArgs e)
+        {
+            mTickColor = (Color)e.NewValue;
+
+        }
+
+
         #endregion ------------------------------------------------------------------------
 
         private void validateSize(int newVal)
@@ -377,6 +406,7 @@ namespace WpfDial
             mDialY = Canvas.GetTop(dial) + mDialRadius;
 
             linePointer.X1 = mDialX; linePointer.Y1 = mDialY;
+            linePointer.Stroke = new SolidColorBrush(mPointerColor);
 
             double startX = 0; double startY = 0; double stopX = 0; double stopY = 0;
             startX = mDialX + mDialRadius + 5;
@@ -414,7 +444,7 @@ namespace WpfDial
             {
                 linePointer.Visibility = Visibility.Hidden;
                 dial.Effect = null;
-                dial.Stroke = new SolidColorBrush(Colors.DarkGray);
+                dial.Stroke = new SolidColorBrush(mPointerColor);
                 dial.StrokeThickness = 1;
                 LinearGradientBrush grad = new LinearGradientBrush();
                 grad.StartPoint = new Point(0, 0);
@@ -427,7 +457,7 @@ namespace WpfDial
             if (mMode == DIAL_MODE_VINTAGE)
             {
                 linePointer.Visibility = Visibility.Visible;
-                linePointer.Stroke = new SolidColorBrush(Colors.Black);
+                linePointer.Stroke = new SolidColorBrush(mPointerColor);
                 dialVintage.Width = dial.Width / INNER_DIAL_SIZE_RATIO;
                 dialVintage.Height = dial.Height / INNER_DIAL_SIZE_RATIO;
                 mDialVintageRadius = (dialVintage.Width) / 2;
@@ -538,7 +568,7 @@ namespace WpfDial
 
                 Line ln = new Line();
                 ln.X1 = targetX; ln.Y1 = targetY; ln.X2 = stopX; ln.Y2 = stopY;
-                ln.StrokeThickness = 1; ln.Stroke = System.Windows.Media.Brushes.Gray;
+                ln.StrokeThickness = 1; ln.Stroke = new SolidColorBrush(mTickColor);
                 canvas.Children.Add(ln);
                 mArrPositions.Add(new Point(markerX, markerY));
 
@@ -727,7 +757,7 @@ namespace WpfDial
 
                 var arcPath = new Path
                 {
-                    Stroke = PointerColor,
+                    Stroke = new SolidColorBrush(mPointerColor),
                     StrokeThickness = 6,
                     Data = g
                 };
@@ -776,7 +806,7 @@ namespace WpfDial
 
                 var arcPath = new Path
                 {
-                    Stroke = PointerColor,
+                    Stroke = new SolidColorBrush(mPointerColor),
                     StrokeThickness = 6,
                     Data = g
                 };
