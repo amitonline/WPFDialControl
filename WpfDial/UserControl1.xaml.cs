@@ -399,8 +399,7 @@ namespace WpfDial
             mMode = (int) Mode;
             if (mMode == DIAL_MODE_MODERN)
             {
-               
-                dial.Effect = null;
+              
                 dial.Stroke = new SolidColorBrush(Colors.DarkGray);
                 dial.StrokeThickness = 1;
                 LinearGradientBrush grad = new LinearGradientBrush();
