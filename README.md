@@ -1,7 +1,12 @@
 # WPFDialControl
 WPF Dial widget for wpf applications
-Still WIP. Works with NET 8.0 and above
+Works with NET 8.0 and above
 Three modes: Modern, Flat and Vintage
+Set custom colors for ticks, dial and pointer. 
+Responds to mouseup, mousedown, mousewheel and mouseclick events.
+
+#Sep 20, 2025
+Implemented Mousedown handler.
 
 #Sep 18, 2025
 Customize colors of the ticks, dial and pointer
