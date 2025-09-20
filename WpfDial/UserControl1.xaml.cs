@@ -61,11 +61,10 @@ namespace WpfDial
         private bool mMousePosProcessing = false;   // becomes true when mouse pos is being calculated
 
         private ArrayList mArrArcs = new ArrayList(); //array of selection arcs
-
+        private Point mLastMousePos;            // track last mouse pos for mousemove event
+        private bool mIsMouseDown = false;      // becomes true of left button is pressed
         private int mMode = DIAL_MODE_FLAT;      // dial mode
-
         private int mSize = 250;                  // current size for user control
-
         private bool mReady = false;            // becomes true when component has rendered
 
         public static readonly RoutedEvent DialClickEvent =
@@ -384,6 +383,8 @@ namespace WpfDial
         {
             if (!mReady)
                 return;
+            mLastMousePos = new Point(0, 0); // set some default value 
+
             Canvas.SetZIndex(dial, DIAL_ZINDEX);
             Canvas.SetZIndex(linePointer, LINEPOINTER_ZINDEX);
             Canvas.SetZIndex(dialVintage, VINTAGEDIAL_ZINDEX);
@@ -905,6 +906,38 @@ namespace WpfDial
             int change = e.Delta;
             processMarkerPosForWheel(change);
             RaiseDialClickEvent(mCurrMarkerPos);
+        }
+
+        private void dial_MouseMove(object sender, MouseEventArgs e)
+        {
+            int change = 0;
+            if (!mIsMouseDown)
+                return;
+            Point thisPos = e.GetPosition(this);
+            if (thisPos.Y < mLastMousePos.Y)
+            {
+                change = 1;
+            } else if (thisPos.Y > mLastMousePos.Y)
+            {
+                change = -1;
+            }
+            mLastMousePos = thisPos;
+
+            if (change != 0)
+            {
+                processMarkerPosForWheel(change);
+                RaiseDialClickEvent(mCurrMarkerPos);
+            }
+        }
+
+        private void dial_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            mIsMouseDown = true;
+        }
+
+        private void dial_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            mIsMouseDown = false;
         }
     }
 

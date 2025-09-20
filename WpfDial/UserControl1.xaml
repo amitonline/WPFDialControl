@@ -8,7 +8,7 @@
              d:DesignHeight="250" d:DesignWidth="250" Loaded="UserControl_Loaded"   SizeChanged="UserControl_SizeChanged" >
     <Canvas Height="250" Width="250" Name="canvas"  >
         <Ellipse Width="150" Height="150" Canvas.Left="50" Canvas.Top="50" 
-           StrokeThickness="4" Name="dial" MouseDown="UserControl_MouseDown" MouseWheel="dial_MouseWheel">
+           StrokeThickness="4" Name="dial" MouseDown="UserControl_MouseDown" MouseWheel="dial_MouseWheel" MouseMove="dial_MouseMove" MouseLeftButtonDown="dial_MouseLeftButtonDown" MouseLeftButtonUp="dial_MouseLeftButtonUp">
             <Ellipse.Effect>
                 <DropShadowEffect Color="Gray" BlurRadius="10"   x:Name="dialShadow"/>
             </Ellipse.Effect>
