@@ -5,15 +5,15 @@ Three modes: Modern, Flat and Vintage
 Set custom colors for ticks, dial and pointer. 
 Responds to mouseup, mousedown, mousewheel and mouseclick events.
 
-# Sep 20, 2025
+## Sep 20, 2025
 Implemented Mousedown handler.
 
-# Sep 18, 2025
+## Sep 18, 2025
 Customize colors of the ticks, dial and pointer
 
 <img width="886" height="335" alt="Screenshot 2025-09-18 184514" src="https://github.com/user-attachments/assets/fc460237-53ab-4166-8795-9c5adca8d3f5" />
 
-# June 7, 2025
+## June 7, 2025
 Improved the Flat Look :
 
 
@@ -22,7 +22,7 @@ Improved the Flat Look :
 [![WPFDialControl Demo](https://i9.ytimg.com/vi/hommN9eepbg/mqdefault.jpg?sqp=COTNuLQG-oaymwEmCMACELQB8quKqQMa8AEB-AHUBoACwgOKAgwIABABGGQgZChkMA8=&rs=AOn4CLD2xv6VvvBFRmFoI_NIvql2vHpdNA)](https://www.youtube.com/watch?v=hommN9eepbg "WPFDialControl demo")
 
 
-# How To Use It In Your Project
+## How To Use It In Your Project
 
 In the repo, there is a sample project called DialControl which shows how to use the WPFDial control. The basic steps are as follows:
 
@@ -41,13 +41,13 @@ The following design-time attributes are available:
   
      By default all ticks and dial colors are gray or black. You can override the default colors with the attributes below:  
      FillStartColor - Color - start gradient color of dial color   
-     FillStopColor - Color - stop gradient colot of dial color - if stop and start are the same color then you get a solid color fill  
+     FillStopColor - Color - stop gradient color of dial color - if stop and start are the same color then you get a solid color fill  
      TickColor - Color - color of the ticks around the dial  
      PointerColor - Color - color of the pointer marker  
 
   Events:
   
-    dialClick - called when there is a mouse event on the dial. This event sends a DialClickRoutedEventArgs object. This object returns a .SelectedPos property which 
+    dialClick - called when there is a mouse event (left or right click, mousewheel and mouse drag) on the dial. This event sends a DialClickRoutedEventArgs object. This object returns a .SelectedPos property which 
                 denotes the current marker position of the dial. Marker positions start from zero. So if there are 4 ticks then the marker positions will be 0 to 3.  
                 
     
