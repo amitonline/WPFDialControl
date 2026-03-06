@@ -5,8 +5,9 @@ Three modes: Modern, Flat and Vintage
 Set custom colors for ticks, dial and pointer. 
 Responds to mouseup, mousedown, mousewheel and mouseclick events.
 
-**Mar 06, 2026**
-Published on Nuget:dotnet add package WpfDial --version 1.0.0
+## Mar 06, 2026  
+Published on Nuget:dotnet add package WpfDial --version 1.0.0  
+
 ## Sep 20, 2025
 Implemented Mousedown handler.
 
