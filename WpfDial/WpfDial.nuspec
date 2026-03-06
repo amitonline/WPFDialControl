@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>WpfDial</id>
+    <version>1.0.0.0</version>
+    <title>WpfDial</title>
+    <authors>Amit Sengupta</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <!-- <icon>icon.png</icon> -->
+    <projectUrl>https://github.com/amitonline/WPFDialControl</projectUrl>
+    <description>Enable dial controls in your WPF applications </description>
+    <releaseNotes>First Release</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>WPF Dial Control</tags>
+  </metadata>
+</package>
